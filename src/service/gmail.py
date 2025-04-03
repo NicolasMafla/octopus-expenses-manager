@@ -3,7 +3,7 @@ from typing import Literal
 from config import logger
 from pydantic import BaseModel
 from typing import List, Optional
-from .model.mail_service import MailService
+from .model import MailService
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
