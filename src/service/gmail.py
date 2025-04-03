@@ -4,6 +4,7 @@ from config import logger
 from pydantic import BaseModel
 from typing import List, Optional
 from .model import MailService
+from ..utils import bs64_to_utf8, process_html
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -45,6 +46,8 @@ class Email(BaseModel):
     subject: Optional[str] = None
     content_type: Optional[str] = None
     data: Optional[str] = None
+    html: Optional[str] = None
+    text: Optional[str] = None
 
 
 class Response(BaseModel):
@@ -67,16 +70,14 @@ class Response(BaseModel):
 
         if self.payload.mimeType == "text/html":
             email.data = self.payload.body.data
-            return email
 
         elif self.payload.mimeType == "multipart/related":
             if len(self.payload.parts) > 1:
                 logger.warning(f"[Gmail] {self.payload.mimeType} email: {self.id} with more than one parts")
-            email.data = self.payload.parts[0].body.data
-            return email
 
-        else:
-            return email
+        email.html = bs64_to_utf8(encoded_data=email.data)
+        email.text = process_html(html=email.html)
+        return email
 
 
 class GmailService(MailService):
