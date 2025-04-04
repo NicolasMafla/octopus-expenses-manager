@@ -6,8 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
-GOOGLE_TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
+CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH")
+TOKEN_PATH = os.getenv("GOOGLE_TOKEN_PATH")
+logger.info(f"{TOKEN_PATH}")
 GMAIL_SCOPES = os.getenv("GMAIL_SCOPES").split(",")
 OPEN_AI_API_KEY = os.getenv("OPEN_AI_API_KEY")
 DEBUG_LEVEL = os.getenv("DEBUG_LEVEL")

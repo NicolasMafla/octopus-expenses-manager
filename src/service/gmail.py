@@ -1,5 +1,4 @@
 import os
-import json
 from typing import Literal
 from config import logger
 from pydantic import BaseModel
@@ -83,10 +82,9 @@ class Response(BaseModel):
 
 
 class GmailService(MailService):
-    def __init__(self, credentials_json: str, token_json: str, scopes: List[str]):
-        self._credentials_json = credentials_json
-        self._token_json = token_json
-        self._token_var_name = "GOOGLE_TOKEN_JSON"
+    def __init__(self, credentials_path: str, token_path: str, scopes: List[str]):
+        self._credentials_path = credentials_path
+        self._token_path = token_path
         self._scopes = scopes
         self._credentials = None
         self._service = None
@@ -95,8 +93,8 @@ class GmailService(MailService):
         logger.info("[Gmail] Initializing authentication process...")
         creds = None
 
-        if self._token_json:
-            creds = Credentials.from_authorized_user_info(json.loads(self._token_json), self._scopes)
+        if os.path.isfile(self._token_path):
+            creds = Credentials.from_authorized_user_file(self._token_path, self._scopes)
             logger.info("[Gmail] Authentication token loaded")
 
         if not creds or not creds.valid:
@@ -104,15 +102,16 @@ class GmailService(MailService):
                 creds.refresh(Request())
                 logger.info("[Gmail] Authentication token refreshed")
             else:
-                if self._credentials_json:
-                    flow = InstalledAppFlow.from_client_config(json.loads(self._credentials_json), self._scopes)
+                if os.path.isfile(self._credentials_path):
+                    flow = InstalledAppFlow.from_client_secrets_file(self._credentials_path, self._scopes)
                     creds = flow.run_local_server(port=0)
                 else:
                     logger.error("[Gmail] Credentials JSON file not found")
                     return creds
 
-            os.environ[f"{self._token_var_name}"] = creds.to_json()
-            logger.info("[Gmail] New authentication token generated")
+            with open(self._token_path, "w") as token:
+                token.write(creds.to_json())
+                logger.info("[Gmail] New authentication token generated")
 
         logger.success("[Gmail] Authentication process completed")
         self._credentials = creds

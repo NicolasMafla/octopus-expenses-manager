@@ -1,10 +1,10 @@
-from config.config import GOOGLE_TOKEN_JSON, GOOGLE_CREDENTIALS_JSON, GMAIL_SCOPES
+from config.config import TOKEN_PATH, CREDENTIALS_PATH, GMAIL_SCOPES
 from src.service.gmail import GmailService, Email
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource
 
 def test_gmail_get_emails():
-    gmail = GmailService(credentials_json=GOOGLE_CREDENTIALS_JSON, token_json=GOOGLE_TOKEN_JSON, scopes=GMAIL_SCOPES)
+    gmail = GmailService(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH, scopes=GMAIL_SCOPES)
 
     gmail.authenticate()
     assert isinstance(gmail._credentials, Credentials)
@@ -21,7 +21,7 @@ def test_gmail_get_emails():
     assert len(emails) == 5
 
 def test_gmail_get_email_by_id():
-    gmail = GmailService(credentials_json=GOOGLE_CREDENTIALS_JSON, token_json=GOOGLE_TOKEN_JSON, scopes=GMAIL_SCOPES)
+    gmail = GmailService(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH, scopes=GMAIL_SCOPES)
 
     gmail.authenticate()
     assert isinstance(gmail._credentials, Credentials)
