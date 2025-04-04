@@ -9,27 +9,16 @@ import base64
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
-import logging
+from loguru import logger
 from starlette.middleware.sessions import SessionMiddleware
 
-# Configuración de logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-# Añadir colores al logger (opcional)
-class LoggerWithColors:
-    def info(self, message):
-        logger.info(message)
-
-    def error(self, message):
-        logger.error(message)
-
-    def success(self, message):
-        logger.info(f"✅ {message}")
-
-
-logger = LoggerWithColors()
+# Configuración de loguru
+logger.remove()  # Quitar el controlador por defecto
+logger.add(
+    sink=lambda msg: print(msg),
+    level="INFO",
+    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level}</level> | <level>{message}</level>"
+)
 
 app = FastAPI(title="Gmail API", description="API para consultar correos de Gmail por ID")
 
