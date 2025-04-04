@@ -74,6 +74,7 @@ class Response(BaseModel):
         elif self.payload.mimeType == "multipart/related":
             if len(self.payload.parts) > 1:
                 logger.warning(f"[Gmail] {self.payload.mimeType} email: {self.id} with more than one parts")
+            email.data = self.payload.parts[0].body.data
 
         email.html = bs64_to_utf8(encoded_data=email.data)
         email.text = process_html(html=email.html)
@@ -125,11 +126,7 @@ class GmailService(MailService):
             logger.error("[Gmail] Credentials not found, building service process failed")
         self._service = service
 
-    def get_emails(self, max_results: int = 10) -> List[Email] | None:
-
-        # filters = "category:primary from:servicios@tarjetasbancopichincha.com"
-        filters = "category:primary from:bancaenlinea@produbanco.com"
-
+    def get_emails(self, max_results: int, filters: str) -> List[Email] | None:
         if self._service:
             try:
                 results = self._service.users().messages().list(
@@ -161,5 +158,25 @@ class GmailService(MailService):
                 return None
 
         else:
-            logger.error(f"[Gmail] Couldn't find any mail service built")
+            logger.error(f"[Gmail] No service found. Call authenticate() and build_service() first")
+            return None
+
+    def get_email_by_id(self, email_id: str) -> Email | None:
+        if self._service:
+            try:
+                logger.info(f"[Gmail] Getting email: {email_id}")
+                response = self._service.users().messages().get(
+                    userId="me",
+                    id=email_id,
+                    format="full"
+                ).execute()
+                email = Response.model_validate(response).parse()
+                logger.success(f"[Gmail] Email {email_id} retrieved and parsed successfully")
+                return email
+
+            except HttpError as error:
+                logger.error(f"[Gmail] Error obtaining email {email_id}: {error}")
+                return None
+        else:
+            logger.error(f"[Gmail] No service found. Call authenticate() and build_service() first")
             return None

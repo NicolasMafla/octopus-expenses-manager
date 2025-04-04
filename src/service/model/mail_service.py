@@ -12,5 +12,9 @@ class MailService(ABC):
         pass
 
     @abstractmethod
-    def get_emails(self, max_results: int) -> Any:
+    def get_emails(self, max_results: int, filters: str) -> Any | None:
+        pass
+
+    @abstractmethod
+    def get_email_by_id(self, email_id: str) -> Any | None:
         pass
