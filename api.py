@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Request, HTTPException
-from config.config import GMAIL_SCOPES, CREDENTIALS_JSON
+from config.config import GMAIL_SCOPES, GOOGLE_TOKEN_JSON, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI
 from src.service.gmail import GmailService
 
 app = FastAPI()
@@ -9,16 +9,26 @@ app = FastAPI()
 @app.post("/gmail/auth")
 async def gmail_auth(request: Request):
     body = await request.body()
-    gmail = GmailService(scopes=GMAIL_SCOPES)
-    gmail.authenticate_web(credentials_json=CREDENTIALS_JSON)
-    gmail.build_service()
+    service = GmailService(
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        redirect_uri=OAUTH_REDIRECT_URI,
+        scopes=GMAIL_SCOPES
+    )
+    service.authenticate_web(token_json=GOOGLE_TOKEN_JSON)
+    service.build_service()
     return f"OK: {body}"
 
 
 @app.get("/email/{email_id}")
 def get_email(email_id: str):
-    service = GmailService(scopes=GMAIL_SCOPES)
-    service.authenticate_web(credentials_json=CREDENTIALS_JSON)
+    service = GmailService(
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        redirect_uri=OAUTH_REDIRECT_URI,
+        scopes=GMAIL_SCOPES
+    )
+    service.authenticate_web(token_json=GOOGLE_TOKEN_JSON)
     service.build_service()
 
     email = service.get_email_by_id(email_id=email_id)

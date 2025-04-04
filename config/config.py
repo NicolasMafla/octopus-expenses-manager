@@ -11,11 +11,16 @@ ENV = os.getenv("ENV")
 logger.info(f"Working environment: {ENV}")
 
 if ENV == "prod":
-    CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+    OAUTH_REDIRECT_URI = os.getenv("OAUTH_REDIRECT_URI")
+    GOOGLE_TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
 
 else:
-    CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
-    TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+    OAUTH_REDIRECT_URI = os.getenv("OAUTH_REDIRECT_URI")
+    GOOGLE_TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
     CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH")
     TOKEN_PATH = os.getenv("GOOGLE_TOKEN_PATH")
 
