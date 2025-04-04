@@ -7,6 +7,7 @@ from typing import List, Optional
 from .model import MailService
 from ..utils import bs64_to_utf8, process_html
 from google.oauth2.credentials import Credentials
+from google.oauth2.service_account import Credentials as ServiceAccountCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
@@ -115,31 +116,21 @@ class GmailService(MailService):
         logger.success("[Gmail] Authentication process completed")
         self._credentials = creds
 
-    def authenticate_from_envs(self, credentials_json: str, token_json: str) -> None:
-        logger.info("[Gmail] Initializing authentication process...")
-        creds = None
+    def authenticate_from_envs(self, credentials_json: str) -> None:
+        logger.info("[Gmail] Initializing authentication process with Service Account...")
 
-        if token_json:
-            creds = Credentials.from_authorized_user_info(json.loads(token_json), self._scopes)
-            logger.info("[Gmail] Authentication token loaded")
+        if not credentials_json:
+            logger.error("[Gmail] Credentials JSON file not found for Service Account")
+            return
 
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                logger.info("[Gmail] Authentication token refreshed")
-            else:
-                if credentials_json:
-                    flow = InstalledAppFlow.from_client_config(json.loads(credentials_json), self._scopes)
-                    creds = flow.run_local_server(port=0)
-                else:
-                    logger.error("[Gmail] Credentials JSON file not found")
-                    return creds
+        try:
+            creds_info = json.loads(credentials_json)
+            self._credentials = ServiceAccountCredentials.from_service_account_info(creds_info, scopes=self._scopes)
+            logger.success("[Gmail] Authentication process completed")
 
-            os.environ["GOOGLE_TOKEN_JSON"] = creds.to_json()
-            logger.info("[Gmail] New authentication token generated")
-
-        logger.success("[Gmail] Authentication process completed")
-        self._credentials = creds
+        except Exception as e:
+            logger.error(f"[Gmail] Error loading Service Account credentials: {e}")
+            self._credentials = None
 
     def build_service(self) -> None:
         logger.info("[Gmail] Initializing building service...")

@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Request
 from config import logger
-from config.config import GMAIL_SCOPES, CREDENTIALS_JSON, TOKEN_JSON
+from config.config import GMAIL_SCOPES, CREDENTIALS_JSON
 from src.service.gmail import GmailService
 
 app = FastAPI()
@@ -18,7 +18,7 @@ async def gmail_notifications(request: Request):
 async def gmail_auth(request: Request):
     body = await request.body()
     gmail = GmailService(scopes=GMAIL_SCOPES)
-    gmail.authenticate_from_envs(credentials_json=CREDENTIALS_JSON, token_json=TOKEN_JSON)
+    gmail.authenticate_from_envs(credentials_json=CREDENTIALS_JSON)
     gmail.build_service()
     return "OK"
 

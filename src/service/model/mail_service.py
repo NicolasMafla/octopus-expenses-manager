@@ -8,7 +8,7 @@ class MailService(ABC):
         pass
 
     @abstractmethod
-    def authenticate_from_envs(self, credentials_json: str, token_json: str) -> None:
+    def authenticate_from_envs(self, credentials_json: str) -> None:
         pass
 
     @abstractmethod

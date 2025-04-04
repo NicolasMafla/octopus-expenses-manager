@@ -12,7 +12,6 @@ logger.info(f"Working environment: {ENV}")
 
 if ENV == "prod":
     CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
-    TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
 
 else:
     CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
