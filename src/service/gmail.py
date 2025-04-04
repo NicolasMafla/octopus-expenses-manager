@@ -89,7 +89,7 @@ class GmailService(MailService):
         self._credentials = None
         self._service = None
 
-    def authenticate_from_paths(self, credentials_path: str, token_path: str) -> None:
+    def authenticate_local(self, credentials_path: str, token_path: str) -> None:
         logger.info("[Gmail] Initializing authentication process...")
         creds = None
 
@@ -116,7 +116,7 @@ class GmailService(MailService):
         logger.success("[Gmail] Authentication process completed")
         self._credentials = creds
 
-    def authenticate_from_envs(self, credentials_json: str) -> None:
+    def authenticate_web(self, credentials_json: str) -> None:
         logger.info("[Gmail] Initializing authentication process with Service Account...")
 
         if not credentials_json:

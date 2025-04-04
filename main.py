@@ -7,20 +7,13 @@ from src.service.gmail import GmailService
 app = FastAPI()
 
 
-@app.post("/gmail/notifications")
-async def gmail_notifications(request: Request):
-    body = await request.body()
-    logger.info(f"📩 Notificación recibida: {body}")
-    return "OK"
-
-
 @app.post("/gmail/auth")
 async def gmail_auth(request: Request):
     body = await request.body()
     gmail = GmailService(scopes=GMAIL_SCOPES)
-    gmail.authenticate_from_envs(credentials_json=CREDENTIALS_JSON)
+    gmail.authenticate_web(credentials_json=CREDENTIALS_JSON)
     gmail.build_service()
-    return "OK"
+    return f"OK: {body}"
 
 
 if __name__ == "__main__":

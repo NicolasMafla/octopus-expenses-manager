@@ -4,11 +4,11 @@ from abc import ABC, abstractmethod
 
 class MailService(ABC):
     @abstractmethod
-    def authenticate_from_paths(self, credentials_path: str, token_path: str) -> None:
+    def authenticate_local(self, credentials_path: str, token_path: str) -> None:
         pass
 
     @abstractmethod
-    def authenticate_from_envs(self, credentials_json: str) -> None:
+    def authenticate_web(self, credentials_json: str) -> None:
         pass
 
     @abstractmethod
