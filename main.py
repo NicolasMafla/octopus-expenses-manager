@@ -2,10 +2,8 @@ import uvicorn
 from typing import Optional
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI, HTTPException, status
-from config.config import (
-    logger, GMAIL_SCOPES, GOOGLE_TOKEN_JSON, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI
-)
-from src.service.web_gmail import WebGmailService, Email
+from config.config import logger, GOOGLE_TOKEN_JSON, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI
+from src.service.web_gmail import WebGmailService
 
 app = FastAPI()
 service = WebGmailService(
@@ -13,7 +11,7 @@ service = WebGmailService(
     client_secret=GOOGLE_CLIENT_SECRET,
     redirect_uri=OAUTH_REDIRECT_URI,
     token=GOOGLE_TOKEN_JSON,
-    scopes=GMAIL_SCOPES
+    scopes=["https://www.googleapis.com/auth/gmail.readonly"]
 )
 
 
