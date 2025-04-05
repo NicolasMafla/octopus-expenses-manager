@@ -82,17 +82,16 @@ class Response(BaseModel):
 
 
 class LocalGmailService(MailService):
-    def __init__(self, scopes: List[str]):
-        self._scopes = scopes
+    def __init__(self):
         self._credentials = None
         self._service = None
 
-    def authenticate(self, credentials_path: str, token_path: str) -> None:
+    def authenticate(self, credentials_path: str, token_path: str, scopes: List[str]) -> None:
         logger.info("[Gmail] Initializing authentication process...")
         creds = None
 
         if os.path.isfile(token_path):
-            creds = Credentials.from_authorized_user_file(token_path, self._scopes)
+            creds = Credentials.from_authorized_user_file(token_path, scopes)
             logger.info("[Gmail] Authentication token loaded")
 
         if not creds or not creds.valid:
@@ -101,7 +100,7 @@ class LocalGmailService(MailService):
                 logger.info("[Gmail] Authentication token refreshed")
             else:
                 if os.path.isfile(credentials_path):
-                    flow = InstalledAppFlow.from_client_secrets_file(credentials_path, self._scopes)
+                    flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
                     creds = flow.run_local_server(port=0)
                 else:
                     logger.error("[Gmail] Credentials JSON file not found")

@@ -5,9 +5,9 @@ from googleapiclient.discovery import Resource
 
 
 def test_gmail_get_emails_auth_paths():
-    gmail = LocalGmailService(scopes=GMAIL_SCOPES)
+    gmail = LocalGmailService()
 
-    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
+    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH, scopes=GMAIL_SCOPES)
     assert isinstance(gmail._credentials, Credentials)
 
     gmail.build_service()
@@ -23,9 +23,9 @@ def test_gmail_get_emails_auth_paths():
 
 
 def test_gmail_get_email_by_id_auth_paths():
-    gmail = LocalGmailService(scopes=GMAIL_SCOPES)
+    gmail = LocalGmailService()
 
-    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
+    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH, scopes=GMAIL_SCOPES)
     assert isinstance(gmail._credentials, Credentials)
 
     gmail.build_service()
