@@ -1,7 +1,7 @@
 import uvicorn
 from typing import Optional
 from fastapi.responses import RedirectResponse
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Response
 from config.config import logger, GOOGLE_TOKEN_JSON, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI
 from src.service.web_gmail import WebGmailService
 
@@ -39,7 +39,7 @@ async def oauth2callback(code: str, state: Optional[str] = None):
 def get_refresh():
     service.authenticate()
     service.build_service()
-    return service.token
+    return Response(content=service.token, media_type="application/json")
 
 @app.get("/emails/{email_id}")
 def get_email_by_id(email_id: str):
