@@ -55,7 +55,7 @@ class GmailAuth:
         self._redirect_uri = os.environ.get("OAUTH_REDIRECT_URI", "https://tu-app-railway.app/oauth2callback")
 
         # Intentar cargar token si existe
-        token_json = os.environ.get("GMAIL_TOKEN")
+        token_json = os.environ.get("GOOGLE_TOKEN_JSON")
         if token_json:
             try:
                 token_info = json.loads(token_json)
@@ -225,7 +225,7 @@ async def authorize():
 async def oauth2callback(code: str, state: Optional[str] = None):
     token_json = gmail_auth.process_oauth_callback(code, state)
     return {
-        "message": "Autorización completada con éxito. Configura el siguiente token como variable de entorno GMAIL_TOKEN en Railway:",
+        "message": "Autorización completada con éxito. Configura el siguiente token como variable de entorno GOOGLE_TOKEN_JSON en Railway:",
         "token": token_json
     }
 
