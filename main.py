@@ -35,6 +35,15 @@ async def oauth2callback(code: str, state: Optional[str] = None):
         "token": token
     }
 
+@app.get("/refresh")
+def get_refresh():
+    service.authenticate()
+    service.build_service()
+    return {
+        "message": "Auth token refreshed",
+        "token": service.token
+    }
+
 @app.get("/emails/{email_id}")
 def get_email_by_id(email_id: str):
     try:

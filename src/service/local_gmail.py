@@ -86,6 +86,13 @@ class LocalGmailService(MailService):
         self._credentials = None
         self._service = None
 
+    @property
+    def token(self):
+        if self._credentials:
+            return self._credentials.to_json()
+        else:
+            return None
+
     def authenticate(self, credentials_path: str, token_path: str, scopes: List[str]) -> None:
         logger.info("[Gmail] Initializing authentication process...")
         creds = None
