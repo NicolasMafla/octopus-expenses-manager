@@ -9,6 +9,7 @@ import base64
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request as GoogleRequest
 from loguru import logger
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -133,7 +134,7 @@ class GmailAuth:
             if self._credentials and self._credentials.expired and self._credentials.refresh_token:
                 logger.info("[Gmail] Refreshing expired token")
                 try:
-                    self._credentials.refresh(Request())
+                    self._credentials.refresh(GoogleRequest())
                     logger.success("[Gmail] Token refreshed successfully")
                 except Exception as e:
                     logger.error(f"[Gmail] Error refreshing token: {e}")
