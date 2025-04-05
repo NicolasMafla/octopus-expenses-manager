@@ -99,6 +99,13 @@ class WebGmailService(MailService):
         else:
             return None
 
+    @property
+    def service(self):
+        if self._service:
+            return self._service
+        else:
+            return None
+
     def get_authorization_url(self):
         if not self._client_id or not self._client_secret:
             logger.error("[Gmail] Missing OAuth client credentials")
