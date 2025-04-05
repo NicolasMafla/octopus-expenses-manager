@@ -1,13 +1,13 @@
-from config.config import TOKEN_PATH, CREDENTIALS_PATH, GMAIL_SCOPES, CREDENTIALS_JSON, TOKEN_JSON
-from src.service.gmail import GmailService, Email
+from config.config import TOKEN_PATH, CREDENTIALS_PATH, GMAIL_SCOPES
+from src.service.local_gmail import LocalGmailService, Email
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import Resource
 
 
 def test_gmail_get_emails_auth_paths():
-    gmail = GmailService(scopes=GMAIL_SCOPES)
+    gmail = LocalGmailService(scopes=GMAIL_SCOPES)
 
-    gmail.authenticate_local(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
+    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
     assert isinstance(gmail._credentials, Credentials)
 
     gmail.build_service()
@@ -23,9 +23,9 @@ def test_gmail_get_emails_auth_paths():
 
 
 def test_gmail_get_email_by_id_auth_paths():
-    gmail = GmailService(scopes=GMAIL_SCOPES)
+    gmail = LocalGmailService(scopes=GMAIL_SCOPES)
 
-    gmail.authenticate_local(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
+    gmail.authenticate(credentials_path=CREDENTIALS_PATH, token_path=TOKEN_PATH)
     assert isinstance(gmail._credentials, Credentials)
 
     gmail.build_service()

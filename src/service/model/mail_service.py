@@ -4,11 +4,7 @@ from abc import ABC, abstractmethod
 
 class MailService(ABC):
     @abstractmethod
-    def authenticate_local(self, credentials_path: str, token_path: str) -> None:
-        pass
-
-    @abstractmethod
-    def authenticate_web(self, credentials_json: str) -> None:
+    def authenticate(self, **kwargs) -> None:
         pass
 
     @abstractmethod
