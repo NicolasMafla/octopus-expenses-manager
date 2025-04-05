@@ -63,6 +63,8 @@ def get_email_by_id(email_id: str):
 @app.post("/setup-watch")
 def setup_gmail_watch():
     try:
+        service.authenticate()
+        service.build_service()
         result = service.service.users().watch(
             userId="me",
             body={
